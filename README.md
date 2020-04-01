@@ -72,7 +72,7 @@ gcloud compute instances create dev-instance \
 
 ## Set up the Cloud Scheduler jobs to call Pub/Sub
 
-- Create the jobs
+- Create the jobs (notice: it's `0 9 * * 1-5` and `0 10 * * 1-5`)
 
     ```bash
 	gcloud beta scheduler jobs create pubsub startup-dev-instances \
