@@ -5,12 +5,27 @@ Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.
 
 ## Scheduling compute instances with Cloud Scheduler
 
-### 1. Config project
+This tutorial demos how to use Cloud Scheduler to schedule Compute Engine instances to start and
+stop at specified or periodical time.
+
+The main componentes used in this turial includes Compute Engine instances (with labels), Cloud
+Pub/Sub, Cloud Functions and Cloud Scheduler. The event flow looks like as below: 
+
+    Cloud Scheduler -> Cloud Pub/Sub -> Cloud Functions -> Start/Stop Compute Engine instances
+
+
+## 1. Config project
+
+Select the project which you have permissions to access Compute Engine, Cloud Pub/Sub, Cloud
+Functions and Cloud Scheduler. Remember to enable these APIs first.
 
 <walkthrough-project-setup></walkthrough-project-setup>
 
 
 ## Set up the Compute Engine instance
+
+Create a sample instance with label `env=dev` which will be used as filter when start/stop action
+executed by Cloud Functions.
 
 ```bash
 gcloud compute instances create dev-instance \
@@ -22,6 +37,8 @@ gcloud compute instances create dev-instance \
 
 ## Set up the Cloud Functions functions with Pub/Sub
 
+Create 2 Cloud Pub/Sub topics which will be used as the triggers of following Cloud Functions.
+
 - Create start-instance and stop-instance event
 
     ```bash
@@ -31,6 +48,9 @@ gcloud compute instances create dev-instance \
     ```bash
     gcloud pubsub topics create stop-instance-event
     ```
+
+Create 2 Cloud Funtions, one for starting instances, the other for stopping instances. They are
+triggered by the message of above 2 Cloud Pub/Sub topics.
 
 - Get code
 
@@ -56,6 +76,9 @@ gcloud compute instances create dev-instance \
       --runtime nodejs8
     ```
 
+Once the functions created, we can manually trigger it to verify the instance being stopped or
+started.
+
 - (Optional) Verify the functions work
 
     ```bash
@@ -72,7 +95,11 @@ gcloud compute instances create dev-instance \
 
 ## Set up the Cloud Scheduler jobs to call Pub/Sub
 
-- Create the jobs (notice: it's `0 9 * * 1-5` and `0 10 * * 1-5`)
+Now we have 2 Cloud Functions with corresponding Cloud Pub/Sub topics as their triggers ready. Then
+we will create 2 Cloud Scheduler jobs, one for starting the instance at 9AM every weekday (Mon. to
+Fri.), the other for stopping the instance at 10AM every weekday. 
+
+- Create the jobs (notice: change below `--schedule` parameter to `0 9 * * 1-5` / `0 10 * * 1-5`)
 
     ```bash
 	gcloud beta scheduler jobs create pubsub startup-dev-instances \
@@ -89,6 +116,9 @@ gcloud compute instances create dev-instance \
       --message-body '{"zone":"us-west1-b", "label":"env=dev"}' \
       --time-zone 'Asia/Taipei'
     ```
+
+Once the jobs created, we don't need to wait until the scheduled time, we can manaully run the jobs
+to verify the following actions being ran accordingly.
 
 - (Optional) Verify the jobs work
 
