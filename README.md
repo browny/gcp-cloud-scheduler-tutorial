@@ -67,13 +67,15 @@ cd nodejs-docs-samples/functions/scheduleinstance/
 ```bash
 gcloud functions deploy startInstancePubSub \
   --trigger-topic start-instance-event \
-  --runtime nodejs8
+  --runtime nodejs8 \
+  --allow-unauthenticated
 ```
 
 ```bash
 gcloud functions deploy stopInstancePubSub \
   --trigger-topic stop-instance-event \
-  --runtime nodejs8
+  --runtime nodejs8 \
+  --allow-unauthenticated
 ```
 
 Once the functions created, we can manually trigger it to verify the instance being stopped or
