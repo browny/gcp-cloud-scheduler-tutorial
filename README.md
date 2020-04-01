@@ -64,17 +64,17 @@ cd nodejs-docs-samples/functions/scheduleinstance/
 
 ### 3. Create the start and stop functions
 
-``bash
-cloud functions deploy startInstancePubSub \
- --trigger-topic start-instance-event \
- --runtime nodejs8
-``
+```bash
+gcloud functions deploy startInstancePubSub \
+  --trigger-topic start-instance-event \
+  --runtime nodejs8
+```
 
-``bash
-cloud functions deploy stopInstancePubSub \
- --trigger-topic stop-instance-event \
- --runtime nodejs8
-``
+```bash
+gcloud functions deploy stopInstancePubSub \
+  --trigger-topic stop-instance-event \
+  --runtime nodejs8
+```
 
 Once the functions created, we can manually trigger it to verify the instance being stopped or
 started.
