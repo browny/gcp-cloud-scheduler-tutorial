@@ -14,7 +14,7 @@ Pub/Sub, Cloud Functions and Cloud Scheduler. The event flow looks like as below
     Cloud Scheduler -> Cloud Pub/Sub -> Cloud Functions -> Start/Stop Compute Engine instances
 
 
-## 1. Config project
+### 1. Config project
 
 Select the project which you have permissions to access Compute Engine, Cloud Pub/Sub, Cloud
 Functions and Cloud Scheduler. Remember to enable these APIs first.
@@ -39,7 +39,7 @@ gcloud compute instances create dev-instance \
 
 Create 2 Cloud Pub/Sub topics which will be used as the triggers of following Cloud Functions.
 
-- Create start-instance and stop-instance event
+### 1. Create start-instance and stop-instance event
 
     ```bash
     gcloud pubsub topics create start-instance-event
@@ -52,7 +52,7 @@ Create 2 Cloud Pub/Sub topics which will be used as the triggers of following Cl
 Create 2 Cloud Funtions, one for starting instances, the other for stopping instances. They are
 triggered by the message of above 2 Cloud Pub/Sub topics.
 
-- Get code
+### 2. Get code
 
     ```bash
     git clone https://github.com/GoogleCloudPlatform/nodejs-docs-samples.git
@@ -62,7 +62,7 @@ triggered by the message of above 2 Cloud Pub/Sub topics.
     cd nodejs-docs-samples/functions/scheduleinstance/
     ```
 
-- Create the start and stop functions
+### 3. Create the start and stop functions
 
     ```bash
 	gcloud functions deploy startInstancePubSub \
@@ -79,7 +79,7 @@ triggered by the message of above 2 Cloud Pub/Sub topics.
 Once the functions created, we can manually trigger it to verify the instance being stopped or
 started.
 
-- (Optional) Verify the functions work
+### 4. (Optional) Verify the functions work
 
     ```bash
 	gcloud functions call stopInstancePubSub \
@@ -99,7 +99,7 @@ Now we have 2 Cloud Functions with corresponding Cloud Pub/Sub topics as their t
 we will create 2 Cloud Scheduler jobs, one for starting the instance at 9AM every weekday (Mon. to
 Fri.), the other for stopping the instance at 10AM every weekday. 
 
-- Create the jobs (notice: change below `--schedule` parameter to `0 9 * * 1-5` / `0 10 * * 1-5`)
+### 1. Create the jobs (notice: change below `--schedule` parameter to `0 9 * * 1-5` / `0 10 * * 1-5`)
 
     ```bash
 	gcloud beta scheduler jobs create pubsub startup-dev-instances \
@@ -120,7 +120,7 @@ Fri.), the other for stopping the instance at 10AM every weekday.
 Once the jobs created, we don't need to wait until the scheduled time, we can manaully run the jobs
 to verify the following actions being ran accordingly.
 
-- (Optional) Verify the jobs work
+### 2. (Optional) Verify the jobs work
 
     ```bash
 	gcloud beta scheduler jobs run shutdown-dev-instances
